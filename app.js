@@ -134,20 +134,20 @@ function buildFull(d){
  const clean=Object.entries(d.clean||{}).map(([k,v])=>`${k}: ${v?'✅':'❌'}`).join('\n');
  const events=(d.events||'').split(/\n/).map(x=>x.trim()).filter(Boolean).join('\n\n');
  const next={A:'B',B:'C',C:'A'}[d.turn];
- const lines=[`📋 *RELATÓRIO TURNO ${d.turn}*`,`📅 *${dateBR(d.date)}*`,'',`🦺 *DDS: ${value(d.dds)}*`,'',`🎯 *Cota programada:* ${value(d.cota)} t`,'',
- '🚛 *Carregamento de açúcar*',`*Expedido - Turno ${d.turn}*`,...sugarLines(d,false),'',
+ const lines=[`📋 *RELATÓRIO TURNO ${d.turn}*`,`📅 *${dateBR(d.date)}*`,'','━━━━━━━━━━━━━━━━',`🦺 *DDS: ${value(d.dds)}*`,'','━━━━━━━━━━━━━━━━',`🎯 *Cota programada:* ${value(d.cota)} t`,'','━━━━━━━━━━━━━━━━',
+ '🚛 *Carregamento de açúcar*',`*Expedido - Turno ${d.turn}*`,...sugarLines(d,false),'','━━━━━━━━━━━━━━━━',
  `📊 *Total do dia:* ${value(d.dayVehicles)} veículos - ${value(d.dayTonnes)} t`,
  '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa Turno ${d.turn}*`,...(d.biomass==='Ativo'?cargoLines(d,'b'):['Suspenso']),
- '━━━━━━━━━━━━━━━━',`🏭 *Produção do turno ${d.turn}:* ${value(d.production)}`,'',
- `📦 *Estoque DA01:* ${value(d.da01)} t`,`*Estoque DA02:* ${value(d.da02)} t`,`*Total em estoque:* ${value($('stockTotal').value)} t`,'',
- '⚙️ *OPERAÇÃO*','',`*Moagem:* ${value(d.milling)}`,'',`*Esteiras:* ${value(d.belts)}`,'',
- '🧹 *Limpeza do Setor:*',clean,'','🧪 *Analise VHP:*',`Cor: ${value(d.color)}`,`Cinzas: ${value(d.ashes)}`,`Umidade: ${value(d.humidity)}`,'',
+ '━━━━━━━━━━━━━━━━',`🏭 *Produção do turno ${d.turn}:* ${value(d.production)}`,'','━━━━━━━━━━━━━━━━',
+ `📦 *Estoque DA01:* ${value(d.da01)} t`,`*Estoque DA02:* ${value(d.da02)} t`,`*Total em estoque:* ${value($('stockTotal').value)} t`,'','━━━━━━━━━━━━━━━━',
+ '⚙️ *OPERAÇÃO*','',`*Moagem:* ${value(d.milling)}`,'',`*Esteiras:* ${value(d.belts)}`,'','━━━━━━━━━━━━━━━━',
+ '🧹 *Limpeza do Setor:*',clean,'','━━━━━━━━━━━━━━━━','🧪 *Analise VHP:*',`Cor: ${value(d.color)}`,`Cinzas: ${value(d.ashes)}`,`Umidade: ${value(d.humidity)}`,'','━━━━━━━━━━━━━━━━',
  '⚠️ *Ocorrências*','',events||'—'];
- if(d.handover!=='none')lines.push('',`🔁 Passando para o Turno *${next}*`,'Bom trabalho a todos🙏🏻');
+ if(d.handover!=='none')lines.push('','━━━━━━━━━━━━━━━━',`🔁 Passando para o Turno *${next}*`,'Bom trabalho a todos🙏🏻');
  return lines.join('\n');
 }
 function buildSimple(d){return [
- `🚛 *Carregamento de Açúcar turno ${d.turn}:*`,...sugarLines(d,true),'',
+ `🚛 *Carregamento de Açúcar turno ${d.turn}:*`,...sugarLines(d,true),'','━━━━━━━━━━━━━━━━',
  `📊 *Total do dia:* ${value(d.sDayVehicles)} veículos - ${value(d.sDayTonnes)} t`,
  '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa ${d.turn}:*`,...(d.sBiomass==='Ativo'?cargoLines(d,'sb'):['Suspenso']),
  '━━━━━━━━━━━━━━━━',`📦 *Estoque DA01:* ${value(d.sDa01)} t`,`*Estoque DA02:* ${value(d.sDa02)} t`,`*Total:* ${value($('sStockTotal').value)} t`,
