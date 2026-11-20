@@ -33,6 +33,7 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:0 18px 24px}
 <section class="card"><h2>Qual relatório deseja preencher?</h2>
 <button type="button" class="choice" data-open="full"><strong>📋 Relatório de Turno</strong><span>Relatório completo dos turnos A, B e C</span></button>
 <button type="button" class="choice" data-open="simple"><strong>🕑 Relatório de 2 Horas</strong><span>Carregamento, estoques e transferência interna</span></button>
+<button type="button" class="choice" id="openPhoto"><strong>📸 Foto Programada — 14h00</strong><span>Guardar a última foto e lembrar de compartilhar sem legenda</span></button>
 <button type="button" class="choice" id="openSeals"><strong>🔒 Gestão de Lacres — Beta</strong><span>Exclusivo para testes neste endereço</span></button><p class="note">Cada aparelho mantém seus próprios últimos dados. Os campos em comum dos dois modelos são atualizados automaticamente neste aparelho.</p></section>
 </div>
 <div id="workspace" hidden>
@@ -137,7 +138,19 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:0 18px 24px}
 <button type="button" class="secondary" id="importBtn">Importar backup</button></div>
 <input type="file" id="importFile" accept="application/json,.json" hidden>
 <div id="history"></div><button type="button" class="danger wide" id="clearHistory">Apagar histórico deste modelo</button></section>
-</div><div id="sealsPage" hidden>
+</div><div id="photoPage" hidden>
+<div class="topbar"><button type="button" class="smallbutton" id="photoBack">← Início</button><span class="report-tag">Foto Programada · Beta</span></div>
+<section class="card"><h2>📸 Foto das 14h00</h2><p class="note">Tire quantas fotos quiser. Somente a última foto salva será mantida. O envio ao WhatsApp é manual, sem legenda.</p>
+<input type="file" id="scheduledPhoto" accept="image/*" capture="environment" aria-label="Tirar nova foto">
+<div class="status" id="photoStatus" role="status"></div>
+<img id="photoPreview" alt="Última foto salva" hidden style="max-width:100%;max-height:380px;border-radius:12px;margin:12px 0;object-fit:contain">
+<p class="note" id="photoSavedAt"></p>
+<button type="button" class="primary wide" id="photoShare">📲 Compartilhar foto sem legenda</button>
+<button type="button" class="secondary wide" id="photoDownload">💾 Salvar cópia na galeria / Downloads</button>
+<button type="button" class="secondary wide" id="photoNotify">🔔 Permitir notificações</button>
+<p class="note">O lembrete é verificado enquanto o aplicativo está aberto e ao reabri-lo. Notificação pontual com app fechado não é garantida por esta versão web: configure também um alarme do Android para 14h00.</p>
+<button type="button" class="danger wide" id="photoDelete">🗑️ Apagar foto salva</button></section></div>
+<div id="sealsPage" hidden>
 <div class="topbar"><button type="button" class="smallbutton" id="sealsBack">← Início</button><span class="report-tag">Gestão de Lacres · Beta</span></div>
 <section class="card"><h2>📷 Novo caminhão</h2><p class="note">Fotografe a tela do SAP. A leitura automática depende de internet na primeira utilização; confira os números antes de salvar.</p>
 <input type="file" id="sealPhoto" accept="image/*" capture="environment"><button class="secondary wide" type="button" id="sealOCR">🔎 Ler texto da foto</button><div class="status" id="sealStatus"></div>
@@ -149,4 +162,4 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:0 18px 24px}
 <section class="card" id="sealTrashBox" hidden><h2>Lixeira — recuperação</h2><div id="sealTrashList"></div><button type="button" class="danger wide" id="sealEmpty">Esvaziar lixeira</button></section>
 </div></main>
 <footer>Os dados ficam somente neste aparelho e neste aplicativo. Revise o relatório antes de enviar.</footer>
-<script src="app.js?v=81beta"></script></body></html>
+<script src="app.js?v=82beta"></script></body></html>
