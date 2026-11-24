@@ -1,8 +1,8 @@
 
 "use strict";
 const $=id=>document.getElementById(id);
-const FULL=["date","dds","cota","vehicles","tonnes","sugarQueue","sugarLoading","sugarInvoice","dayVehicles","dayTonnes","biomass","sugarStatus","sugarQueue","sugarLoading","sugarInvoice","bVehicles","bTonnes","bQueue","bLoading","bInvoice","production","da01","da02","milling","belts","color","ashes","humidity","events","handover"];
-const SIMPLE=["sVehicles","sTonnes","sQueue","sWeighing","sLoading","sDayVehicles","sDayTonnes","sBiomass","sSugarStatus","sbVehicles","sbTonnes","sbQueue","sbLoading","sbInvoice","sDa01","sDa02","sTrips"];
+const FULL=["date","dds","cota","vehicles","tonnes","sugarQueue","sugarLoading","sugarInvoice","dayVehicles","dayTonnes","biomass","sugarStatus","sugarQueue","sugarLoading","sugarInvoice","bVehicles","bTonnes","bQueue","bLoading","bInvoice","bDayVehicles","bDayTonnes","production","da01","da02","milling","belts","color","ashes","humidity","events","handover"];
+const SIMPLE=["sVehicles","sTonnes","sQueue","sWeighing","sLoading","sDayVehicles","sDayTonnes","sBiomass","sSugarStatus","sbVehicles","sbTonnes","sbQueue","sbLoading","sbInvoice","sbDayVehicles","sbDayTonnes","sDa01","sDa02","sTrips"];
 const OLD_DRAFT="relatorioTurno.draft.v1", OLD_HISTORY="relatorioTurno.v1";
 const draftKey=t=>`relatoriosOperacao.${t}.draft.v2`;
 const historyKey=t=>`relatoriosOperacao.${t}.history.v2`;
@@ -38,7 +38,7 @@ function formatNumberInput(el){
  el.value=formatted;
  try{el.setSelectionRange(beforeFormatted.length,beforeFormatted.length)}catch{}
 }
-const NUMERIC_IDS=["cota","vehicles","tonnes","dayVehicles","dayTonnes","production","da01","da02","color","ashes","humidity","sVehicles","sTonnes","sQueue","sWeighing","sLoading","sDayVehicles","sDayTonnes","sDa01","sDa02","sTrips","bVehicles","bTonnes","bQueue","bLoading","bInvoice","sbVehicles","sbTonnes","sbQueue","sbLoading","sbInvoice"];
+const NUMERIC_IDS=["cota","vehicles","tonnes","dayVehicles","dayTonnes","production","da01","da02","color","ashes","humidity","sVehicles","sTonnes","sQueue","sWeighing","sLoading","sDayVehicles","sDayTonnes","sDa01","sDa02","sTrips","bVehicles","bTonnes","bQueue","bLoading","bInvoice","bDayVehicles","bDayTonnes","sbVehicles","sbTonnes","sbQueue","sbLoading","sbInvoice","sbDayVehicles","sbDayTonnes"];
 function normalizeSavedInputs(){
  NUMERIC_IDS.forEach(id=>{const el=$(id);if(el&&el.value)el.value=groupNumber(el.value)});
 }
@@ -69,7 +69,7 @@ function updateTurnButtons(type){
   b.classList.toggle("active",(b.dataset.turn||b.dataset.simpleTurn)===turn[type]);
  });
 }
-const SHARED_PAIRS=[['vehicles','sVehicles'],['tonnes','sTonnes'],['dayVehicles','sDayVehicles'],['dayTonnes','sDayTonnes'],['biomass','sBiomass'],['sugarStatus','sSugarStatus'],['bVehicles','sbVehicles'],['bTonnes','sbTonnes'],['bQueue','sbQueue'],['bLoading','sbLoading'],['bInvoice','sbInvoice'],['da01','sDa01'],['da02','sDa02']];
+const SHARED_PAIRS=[['vehicles','sVehicles'],['tonnes','sTonnes'],['dayVehicles','sDayVehicles'],['dayTonnes','sDayTonnes'],['biomass','sBiomass'],['sugarStatus','sSugarStatus'],['bVehicles','sbVehicles'],['bTonnes','sbTonnes'],['bQueue','sbQueue'],['bLoading','sbLoading'],['bInvoice','sbInvoice'],['bDayVehicles','sbDayVehicles'],['bDayTonnes','sbDayTonnes'],['da01','sDa01'],['da02','sDa02']];
 let syncing=false;
 function syncShared(type,changedId){
  if(syncing)return;
@@ -137,7 +137,7 @@ function buildFull(d){
  const lines=[`📋 *RELATÓRIO TURNO ${d.turn}*`,`📅 *${dateBR(d.date)}*`,'','━━━━━━━━━━━━━━━━',`🦺 *DDS: ${value(d.dds)}*`,'','━━━━━━━━━━━━━━━━',`🎯 *Cota programada:* ${value(d.cota)} t`,'','━━━━━━━━━━━━━━━━',
  '🚛 *Carregamento de açúcar*',`*Expedido - Turno ${d.turn}*`,...sugarLines(d,false),'','━━━━━━━━━━━━━━━━',
  `📊 *Total do dia:* ${value(d.dayVehicles)} veículos - ${value(d.dayTonnes)} t`,
- '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa Turno ${d.turn}*`,...(d.biomass==='Ativo'?cargoLines(d,'b'):['Suspenso']),
+ '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa Turno ${d.turn}*`,...(d.biomass==='Ativo'?[...cargoLines(d,'b'),'','━━━━━━━━━━━━━━━━',`📊 *Total do dia:* ${value(d.bDayVehicles)} veículos - ${value(d.bDayTonnes)} t`]:['Suspenso']),
  '━━━━━━━━━━━━━━━━',`🏭 *Produção do turno ${d.turn}:* ${value(d.production)}`,'','━━━━━━━━━━━━━━━━',
  `📦 *Estoque DA01:* ${value(d.da01)} t`,`*Estoque DA02:* ${value(d.da02)} t`,`*Total em estoque:* ${value($('stockTotal').value)} t`,'','━━━━━━━━━━━━━━━━',
  '⚙️ *OPERAÇÃO*','',`*Moagem:* ${value(d.milling)}`,'',`*Esteiras:* ${value(d.belts)}`,'','━━━━━━━━━━━━━━━━',
@@ -149,7 +149,7 @@ function buildFull(d){
 function buildSimple(d){return [
  `🚛 *Carregamento de Açúcar turno ${d.turn}:*`,...sugarLines(d,true),'','━━━━━━━━━━━━━━━━',
  `📊 *Total do dia:* ${value(d.sDayVehicles)} veículos - ${value(d.sDayTonnes)} t`,
- '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa ${d.turn}:*`,...(d.sBiomass==='Ativo'?cargoLines(d,'sb'):['Suspenso']),
+ '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa ${d.turn}:*`,...(d.sBiomass==='Ativo'?[...cargoLines(d,'sb'),'','━━━━━━━━━━━━━━━━',`📊 *Total do dia:* ${value(d.sbDayVehicles)} veículos - ${value(d.sbDayTonnes)} t`]:['Suspenso']),
  '━━━━━━━━━━━━━━━━',`📦 *Estoque DA01:* ${value(d.sDa01)} t`,`*Estoque DA02:* ${value(d.sDa02)} t`,`*Total:* ${value($('sStockTotal').value)} t`,
  '━━━━━━━━━━━━━━━━','🔄 *Transferência vira interno DA01 para DA02*',`*Viagem:* ${value(d.sTrips)} viagens`].join('\n')}
 function generate(){
