@@ -26,8 +26,15 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:0 18px 24px}
 .smallbutton{border:0;background:#e7eee8;color:var(--green2);border-radius:9px;padding:10px;font-weight:650}
 .report-tag{font-size:12px;color:var(--muted)}
 .voice-panel{border:1px solid #b7d7c2;background:#f2faf4;border-radius:13px;padding:14px;margin:12px 0}.voice-panel h2{margin-bottom:7px}.voice-panel p{font-size:13px;margin:7px 0}.voice-panel textarea{margin-top:8px}.voice-buttons{display:flex;gap:8px;flex-wrap:wrap}.voice-buttons button{flex:1}.voice-error{color:#9f2727;font-size:13px}
-</style></head>
-<body><header><h1>Relatórios de Operação</h1><p>Escolha o modelo, preencha e envie pelo WhatsApp.</p></header>
+
+.theme-control{display:flex;align-items:center;gap:8px;margin-top:12px}.theme-control label{color:white;margin:0}.theme-control select{width:auto;min-height:36px;padding:6px 10px;font-size:14px}
+:root[data-theme="dark"]{color-scheme:dark;--green:#17643e;--green2:#a9e6bd;--bg:#101713;--ink:#e6eee8;--muted:#a8b9ad;--line:#38483d;--white:#1b2620}
+[data-theme="dark"] label{color:#cbd9ce}[data-theme="dark"] .theme-control label{color:white}
+[data-theme="dark"] input,[data-theme="dark"] select,[data-theme="dark"] textarea{background:#111b15;border-color:#46594b;color:var(--ink)}
+[data-theme="dark"] .choice{background:var(--white)}[data-theme="dark"] .turns button:not(.active),[data-theme="dark"] .secondary,[data-theme="dark"] .smallbutton,[data-theme="dark"] .history-item button{background:#2b3d30;color:var(--green2)}
+[data-theme="dark"] #preview,[data-theme="dark"] .voice-panel{background:#142019;border-color:var(--line)}[data-theme="dark"] .status{color:#a9e6bd}[data-theme="dark"] .danger{background:#492725;color:#ffc2bc}[data-theme="dark"] .voice-error{color:#ffc2bc}
+</style><script>try{const t=localStorage.getItem('relatorios.theme')||'auto';document.documentElement.dataset.theme=t==='auto'?(matchMedia('(prefers-color-scheme: dark)').matches?'dark':'light'):t}catch(e){}</script></head>
+<body><header><h1>Relatórios de Operação</h1><p>Escolha o modelo, preencha e envie pelo WhatsApp.</p><div class="theme-control"><label for="themeSelect">Tema</label><select id="themeSelect"><option value="auto">📱 Automático</option><option value="light">☀️ Claro</option><option value="dark">🌙 Escuro</option></select></div></header>
 <main>
 <div id="home">
 <section class="card"><h2>Qual relatório deseja preencher?</h2>
@@ -170,4 +177,4 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:0 18px 24px}
 <section class="card" id="sealTrashBox" hidden><h2>Lixeira — recuperação</h2><div id="sealTrashList"></div><button type="button" class="danger wide" id="sealEmpty">Esvaziar lixeira</button></section>
 </div></main>
 <footer>Os dados ficam somente neste aparelho e neste aplicativo. Revise o relatório antes de enviar.</footer>
-<script src="app.js?v=84beta"></script></body></html>
+<script src="app.js?v=85beta"></script></body></html>

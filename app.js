@@ -97,7 +97,7 @@ function statusValue(v){return /suspens|não realizado|conclu/i.test(String(v||'
 function normalizeStatus(){for(const id of ['biomass','sBiomass'])$(id).value=statusValue($(id).value);for(const id of ['sugarStatus','sSugarStatus'])if(!$(id).value)$(id).value='Ativo'}
 function updateVisibility(){
  $('bioFullFields').hidden=$('biomass').value!=='Ativo';$('bioSimpleFields').hidden=$('sBiomass').value!=='Ativo';
- for(const [id,fields] of [['sugarStatus',['vehicles','tonnes','sugarQueue','sugarLoading','sugarInvoice']],['sSugarStatus',['sVehicles','sTonnes','sQueue','sWeighing','sLoading']]]){
+ for(const [id,fields] of [['sugarStatus',['vehicles','tonnes','sugarQueue','sugarLoading','sugarInvoice','dayVehicles','dayTonnes']],['sSugarStatus',['sVehicles','sTonnes','sQueue','sWeighing','sLoading','sDayVehicles','sDayTonnes']]]){
   const hide=$(id).value==='Suspenso';fields.forEach(f=>{$(f).closest('.field').hidden=hide});
  }
 }
@@ -135,8 +135,7 @@ function buildFull(d){
  const events=(d.events||'').split(/\n/).map(x=>x.trim()).filter(Boolean).join('\n\n');
  const next={A:'B',B:'C',C:'A'}[d.turn];
  const lines=[`📋 *RELATÓRIO TURNO ${d.turn}*`,`📅 *${dateBR(d.date)}*`,'','━━━━━━━━━━━━━━━━',`🦺 *DDS: ${value(d.dds)}*`,'','━━━━━━━━━━━━━━━━',`🎯 *Cota programada:* ${value(d.cota)} t`,'','━━━━━━━━━━━━━━━━',
- '🚛 *Carregamento de açúcar*',`*Expedido - Turno ${d.turn}*`,...sugarLines(d,false),'','━━━━━━━━━━━━━━━━',
- `📊 *Total do dia:* ${value(d.dayVehicles)} veículos - ${value(d.dayTonnes)} t`,
+ '🚛 *Carregamento de açúcar*',`*Expedido - Turno ${d.turn}*`,...sugarLines(d,false),...(d.sugarStatus==='Suspenso'?[]:['','━━━━━━━━━━━━━━━━',`📊 *Total do dia:* ${value(d.dayVehicles)} veículos - ${value(d.dayTonnes)} t`]),
  '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa Turno ${d.turn}*`,...(d.biomass==='Ativo'?[...cargoLines(d,'b'),'','━━━━━━━━━━━━━━━━',`📊 *Total do dia:* ${value(d.bDayVehicles)} veículos - ${value(d.bDayTonnes)} t`]:['Suspenso']),
  '━━━━━━━━━━━━━━━━',`🏭 *Produção do turno ${d.turn}:* ${value(d.production)}`,'','━━━━━━━━━━━━━━━━',
  `📦 *Estoque DA01:* ${value(d.da01)} t`,`*Estoque DA02:* ${value(d.da02)} t`,`*Total em estoque:* ${value($('stockTotal').value)} t`,'','━━━━━━━━━━━━━━━━',
@@ -147,8 +146,7 @@ function buildFull(d){
  return lines.join('\n');
 }
 function buildSimple(d){return [
- `🚛 *Carregamento de Açúcar turno ${d.turn}:*`,...sugarLines(d,true),'','━━━━━━━━━━━━━━━━',
- `📊 *Total do dia:* ${value(d.sDayVehicles)} veículos - ${value(d.sDayTonnes)} t`,
+ `🚛 *Carregamento de Açúcar turno ${d.turn}:*`,...sugarLines(d,true),...(d.sSugarStatus==='Suspenso'?[]:['','━━━━━━━━━━━━━━━━',`📊 *Total do dia:* ${value(d.sDayVehicles)} veículos - ${value(d.sDayTonnes)} t`]),
  '━━━━━━━━━━━━━━━━',`🌿 *Carregamento Biomassa ${d.turn}:*`,...(d.sBiomass==='Ativo'?[...cargoLines(d,'sb'),'','━━━━━━━━━━━━━━━━',`📊 *Total do dia:* ${value(d.sbDayVehicles)} veículos - ${value(d.sbDayTonnes)} t`]:['Suspenso']),
  '━━━━━━━━━━━━━━━━',`📦 *Estoque DA01:* ${value(d.sDa01)} t`,`*Estoque DA02:* ${value(d.sDa02)} t`,`*Total:* ${value($('sStockTotal').value)} t`,
  '━━━━━━━━━━━━━━━━','🔄 *Transferência vira interno DA01 para DA02*',`*Viagem:* ${value(d.sTrips)} viagens`].join('\n')}
@@ -389,3 +387,6 @@ $('photoDelete').onclick=async()=>{if(!confirm('Apagar a foto salva? Esta ação
 $('photoNotify').onclick=async()=>{if(!('Notification'in window)){photoStatus('Este navegador não suporta notificações. Use o alarme do Android.');return}try{const result=await Notification.requestPermission();photoStatus(result==='granted'?'Notificações permitidas. Mantenha também um alarme no Android para 14h00.':'Notificações não permitidas. Você pode ativá-las nas configurações do Android.')}catch{photoStatus('Não foi possível solicitar permissão. Use o alarme do Android.')}};
 function photoReminder(){const now=new Date(),day=localDate();if(now.getHours()!==14||now.getMinutes()>5||photoLastReminder===day)return;photoLastReminder=day;photoRecord('readonly').then(async rec=>{if(!rec?.blob)return;photoStatus('🔔 São 14h00! Sua foto está pronta para compartilhar.');if('Notification'in window&&Notification.permission==='granted'&&document.visibilityState==='visible'){try{new Notification('📸 Foto das 14h00',{body:'Sua foto está pronta. Abra o aplicativo e compartilhe no grupo.'})}catch{}}}).catch(()=>{})}
 setInterval(photoReminder,15000);document.addEventListener('visibilitychange',()=>{if(!document.hidden)photoReminder()});
+
+// Preferência de tema independente dos dados operacionais.
+(()=>{const select=document.getElementById('themeSelect'),media=matchMedia('(prefers-color-scheme: dark)');let mode='auto';try{mode=localStorage.getItem('relatorios.theme')||'auto'}catch(e){}if(!['auto','light','dark'].includes(mode))mode='auto';select.value=mode;function apply(){const dark=mode==='dark'||(mode==='auto'&&media.matches);document.documentElement.dataset.theme=dark?'dark':'light';document.querySelector('meta[name="theme-color"]').content=dark?'#17643e':'#166534'}select.addEventListener('change',()=>{mode=select.value;try{localStorage.setItem('relatorios.theme',mode)}catch(e){}apply()});if(media.addEventListener)media.addEventListener('change',apply);else if(media.addListener)media.addListener(apply);apply()})();
